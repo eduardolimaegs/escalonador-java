@@ -33,5 +33,4 @@ public class Processo {
     public String getRecursosNecessarios() {
         return recursosNecessarios;
     }
-
 }
