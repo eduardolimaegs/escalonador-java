@@ -24,6 +24,18 @@ public class ListaDeProcesso {
                 this.cauda = novoNo;
             }
         }
+    public Processo removerProcesso() {
+        if (cabeca == null){
+            return null;
+        }
+        Processo processoRemovido = cabeca.getProcesso();
+        cabeca = cabeca.getProximo();
+
+        if (cabeca == null){
+            cauda = null;
+        }
+        return processoRemovido;
+    }
     }
 
 
