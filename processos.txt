@@ -1,0 +1,11 @@
+# Formato: id, nome, prioridade (1=Alta, 2=Média, 3=Baixa), ciclos, recurso (opcional)
+1,RenderVideo,1,3,null
+2,Firewall,1,2,null
+3,Backup,2,4,DISCO
+4,Antivirus,1,4,null
+5,Compilador,1,5,null
+6,EditorTexto,3,3,null
+7,Planilha,2,2,null
+8,JogoLeve,1,3,null
+9,VerificadorEmail,3,2,null
+10,Atualizador,1,2,null

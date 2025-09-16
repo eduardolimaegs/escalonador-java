@@ -14,40 +14,54 @@ public class Scheduler {
     }
 
     public void adicionarProcesso(Processo processo) {
-        if (processo.getPrioridade() == 1) {
-            listaAltaPrioridade.addFinal(processo);
-        } else if (processo.getPrioridade() == 2) {
-            listaMediaPrioridade.addFinal(processo);
-        } else {
-            listaBaixaPrioridade.addFinal(processo);
+        switch (processo.getPrioridade()) {
+            case 1:
+                listaAltaPrioridade.addFinal(processo);
+                break;
+            case 2:
+                listaMediaPrioridade.addFinal(processo);
+                break;
+            default:
+                listaBaixaPrioridade.addFinal(processo);
+                break;
         }
     }
 
     public void executarCicloDeCPU() {
-        System.out.println("\n INICIANDO CICLO ");
+        System.out.println("\n--- INICIANDO NOVO CICLO ---");
 
+        // 1. Desbloqueia um processo da fila de bloqueados, se houver.
         if (!listaBloqueados.estaVazio()) {
             Processo processoDesbloqueado = listaBloqueados.removerProcesso();
             if (processoDesbloqueado != null) {
-                System.out.println(" Desbloqueando processo: " + processoDesbloqueado.getNome() + " (id: " + processoDesbloqueado.getId() + ")");
+                System.out.println("-> Desbloqueando processo: " + processoDesbloqueado.getNome() + " (id: " + processoDesbloqueado.getId() + ")");
                 adicionarProcesso(processoDesbloqueado);
             }
         }
 
         Processo processoEmExecucao = null;
 
-        if (contadorCiclosAltaPrioridade >= 5 && !listaMediaPrioridade.estaVazio()) {
-            processoEmExecucao = listaMediaPrioridade.removerProcesso();
-            contadorCiclosAltaPrioridade = 0;
-            System.out.println(" ANTI-INANIÇÃO ATIVADA ");
-        } else if (contadorCiclosAltaPrioridade >= 5 && !listaBaixaPrioridade.estaVazio()) {
-            processoEmExecucao = listaBaixaPrioridade.removerProcesso();
-            contadorCiclosAltaPrioridade = 0;
-            System.out.println(" ANTI-INANIÇÃO ATIVADA ");
-        } else {
+        // 2. Lógica de seleção de processo com política de anti-inanição.
+        // Se 5 processos de alta prioridade executaram seguidamente, dá chance para os de média/baixa.
+        boolean antiInanicaoAtivada = false;
+        if (contadorCiclosAltaPrioridade >= 5) {
+            if (!listaMediaPrioridade.estaVazio()) {
+                processoEmExecucao = listaMediaPrioridade.removerProcesso();
+                antiInanicaoAtivada = true;
+            } else if (!listaBaixaPrioridade.estaVazio()) {
+                processoEmExecucao = listaBaixaPrioridade.removerProcesso();
+                antiInanicaoAtivada = true;
+            }
+            if(antiInanicaoAtivada) {
+                System.out.println("-> ANTI-INANIÇÃO ATIVADA: Dando chance para outras prioridades.");
+                contadorCiclosAltaPrioridade = 0; // Reseta o contador
+            }
+        }
+
+        // 3. Se a anti-inanição não foi ativada, segue a seleção por prioridade padrão.
+        if (processoEmExecucao == null) {
             if (!listaAltaPrioridade.estaVazio()) {
                 processoEmExecucao = listaAltaPrioridade.removerProcesso();
-                contadorCiclosAltaPrioridade++;
             } else if (!listaMediaPrioridade.estaVazio()) {
                 processoEmExecucao = listaMediaPrioridade.removerProcesso();
             } else if (!listaBaixaPrioridade.estaVazio()) {
@@ -55,20 +69,30 @@ public class Scheduler {
             }
         }
 
-        if (processoEmExecucao != null) {
-            System.out.println(" Executando: " + processoEmExecucao.getNome() + " (id: " + processoEmExecucao.getId() + ")");
 
+        // 4. Executa o processo selecionado.
+        if (processoEmExecucao != null) {
+            // Incrementa o contador apenas se o processo executado for de alta prioridade.
+            if (processoEmExecucao.getPrioridade() == 1 && !antiInanicaoAtivada) {
+                contadorCiclosAltaPrioridade++;
+            }
+
+            System.out.println("Executando: " + processoEmExecucao.getNome() + " (Prioridade: " + processoEmExecucao.getPrioridade() + ")");
+
+            // Verifica se o processo precisa de um recurso e o bloqueia.
             if ("DISCO".equals(processoEmExecucao.getRecursosNecessarios()) && !processoEmExecucao.getSolicitouDisco()) {
-                System.out.println("Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
+                System.out.println("  -> Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
                 processoEmExecucao.setSolicitouDisco(true);
                 listaBloqueados.addFinal(processoEmExecucao);
             } else {
+                // Caso contrário, executa normalmente.
                 processoEmExecucao.decrementarCiclos();
 
                 if (processoEmExecucao.getCiclosNecessarios() > 0) {
+                    System.out.println("  -> Processo " + processoEmExecucao.getNome() + " retornou à fila. Ciclos restantes: " + processoEmExecucao.getCiclosNecessarios());
                     adicionarProcesso(processoEmExecucao);
                 } else {
-                    System.out.println("Processo " + processoEmExecucao.getNome() + " terminou a execução.");
+                    System.out.println("  -> Processo " + processoEmExecucao.getNome() + " terminou a execução.");
                 }
             }
         } else {
@@ -80,11 +104,11 @@ public class Scheduler {
 
     private void imprimirEstadoDasListas() {
         System.out.println("--- ESTADO DAS FILAS --- ");
-        System.out.println("Alta Prioridade: " + listaAltaPrioridade);
-        System.out.println("Média Prioridade: " + listaMediaPrioridade);
-        System.out.println("Baixa Prioridade: " + listaBaixaPrioridade);
-        System.out.println("Bloqueados: " + listaBloqueados);
-        System.out.println("Contador de Ciclos Alta: " + contadorCiclosAltaPrioridade);
+        System.out.println("Alta Prioridade:  " + listaAltaPrioridade.toString());
+        System.out.println("Média Prioridade: " + listaMediaPrioridade.toString());
+        System.out.println("Baixa Prioridade: " + listaBaixaPrioridade.toString());
+        System.out.println("Bloqueados:       " + listaBloqueados.toString());
+        System.out.println("Contador de Ciclos de Alta Prioridade: " + contadorCiclosAltaPrioridade);
         System.out.println("------------------------");
     }
 
@@ -93,6 +117,5 @@ public class Scheduler {
                 this.listaMediaPrioridade.estaVazio() &&
                 this.listaBaixaPrioridade.estaVazio() &&
                 this.listaBloqueados.estaVazio();
-
     }
 }

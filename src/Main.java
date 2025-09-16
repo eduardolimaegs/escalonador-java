@@ -1,6 +1,6 @@
 import java.io.File;
-import java.util.Scanner;
 import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,6 +13,9 @@ public class Main {
 
             while (scanner.hasNextLine()) {
                 String linha = scanner.nextLine();
+                if (linha.trim().isEmpty() || linha.startsWith("#")) {
+                    continue;
+                }
                 String[] dados = linha.split(",");
 
                 int id = Integer.parseInt(dados[0].trim());
@@ -26,19 +29,20 @@ public class Main {
             }
             scanner.close();
         } catch (FileNotFoundException e) {
-            System.err.println("Erro: Arquivo não encontrado.");
+            System.err.println("Erro: Arquivo '" + arquivoProcessos + "' não encontrado.");
+            System.err.println("Certifique-se de criar o arquivo com os processos no mesmo diretório.");
             return;
         }
 
-        System.out.println("Iniciando o escalonador");
+        System.out.println(">>> INICIANDO A SIMULAÇÃO DO ESCALONADOR <<<");
 
         int cicloAtual = 0;
         while (!scheduler.todasAsListasEstaoVazias()) {
-            System.out.println("\n Ciclo " + (++cicloAtual));
+            System.out.println("\n==================== CICLO " + (++cicloAtual) + " ====================");
             scheduler.executarCicloDeCPU();
+
         }
 
-        System.out.println("\nTodos os processos foram executados. \n Simulação concluída.");
+        System.out.println("\n>>> TODOS OS PROCESSOS FORAM EXECUTADOS. SIMULAÇÃO CONCLUÍDA. <<<");
     }
 }
-
