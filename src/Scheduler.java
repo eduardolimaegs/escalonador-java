@@ -29,7 +29,7 @@ public class Scheduler {
             if (!listaBloqueados.estaVazio()) {
                 Processo processoDesbloqueado = listaBloqueados.removerProcesso();
                 if (processoDesbloqueado != null) {
-                    System.out.println(">>> Desbloqueando processo: " + processoDesbloqueado.getNome() + " (id: " + processoDesbloqueado.getId() + ")");
+                    System.out.println(" Desbloqueando processo: " + processoDesbloqueado.getNome() + " (id: " + processoDesbloqueado.getId() + ")");
                     adicionarProcesso(processoDesbloqueado);
                 }
             }
@@ -39,11 +39,11 @@ public class Scheduler {
             if (contadorCiclosAltaPrioridade >= 5 && !listaMediaPrioridade.estaVazio()) {
                 processoEmExecucao = listaMediaPrioridade.removerProcesso();
                 contadorCiclosAltaPrioridade = 0;
-                System.out.println("--- REGRA DE ANTI-INANIÇÃO ATIVADA ---");
+                System.out.println(" ANTI-INANIÇÃO ATIVADA ");
             } else if (contadorCiclosAltaPrioridade >= 5 && !listaBaixaPrioridade.estaVazio()) {
                 processoEmExecucao = listaBaixaPrioridade.removerProcesso();
                 contadorCiclosAltaPrioridade = 0;
-                System.out.println("--- REGRA DE ANTI-INANIÇÃO ATIVADA ---");
+                System.out.println(" ANTI-INANIÇÃO ATIVADA ");
             } else {
                 if (!listaAltaPrioridade.estaVazio()) {
                     processoEmExecucao = listaAltaPrioridade.removerProcesso();
@@ -87,4 +87,12 @@ public class Scheduler {
             System.out.println("Contador de Ciclos Alta: " + contadorCiclosAltaPrioridade);
             System.out.println("------------------------");
         }
+
+    public boolean todasAsListasEstaoVazias() {
+        return this.listaAltaPrioridade.estaVazio() &&
+                this.listaMediaPrioridade.estaVazio() &&
+                this.listaBaixaPrioridade.estaVazio() &&
+                this.listaBloqueados.estaVazio();
+
+    }
 }

@@ -24,6 +24,6 @@ public class ListaDeProcesso {
                 this.cauda = novoNo;
             }
         }
-    }
+}
 
 
