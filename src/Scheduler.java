@@ -24,7 +24,7 @@ public class Scheduler {
         }
 
         public void executarCicloDeCPU() {
-            System.out.println("\n--- INICIANDO CICLO ---");
+            System.out.println("\n INICIANDO CICLO ");
 
             if (!listaBloqueados.estaVazio()) {
                 Processo processoDesbloqueado = listaBloqueados.removerProcesso();
@@ -56,7 +56,7 @@ public class Scheduler {
             }
 
             if (processoEmExecucao != null) {
-                System.out.println(">>> Executando: " + processoEmExecucao.getNome() + " (id: " + processoEmExecucao.getId() + ")");
+                System.out.println(" Executando: " + processoEmExecucao.getNome() + " (id: " + processoEmExecucao.getId() + ")");
 
                 if ("DISCO".equals(processoEmExecucao.getRecursosNecessarios()) && !processoEmExecucao.getSolicitouDisco()) {
                     System.out.println("Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
@@ -79,7 +79,7 @@ public class Scheduler {
         }
 
         private void imprimirEstadoDasListas() {
-            System.out.println("--- ESTADO DAS FILAS ---");
+            System.out.println("--- ESTADO DAS FILAS --- ");
             System.out.println("Alta Prioridade: " + listaAltaPrioridade);
             System.out.println("Média Prioridade: " + listaMediaPrioridade);
             System.out.println("Baixa Prioridade: " + listaBaixaPrioridade);
