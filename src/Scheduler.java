@@ -30,7 +30,6 @@ public class Scheduler {
     public void executarCicloDeCPU() {
         System.out.println("\n--- INICIANDO NOVO CICLO ---");
 
-        // 1. Desbloqueia um processo da fila de bloqueados, se houver.
         if (!listaBloqueados.estaVazio()) {
             Processo processoDesbloqueado = listaBloqueados.removerProcesso();
             if (processoDesbloqueado != null) {
@@ -40,9 +39,6 @@ public class Scheduler {
         }
 
         Processo processoEmExecucao = null;
-
-        // 2. Lógica de seleção de processo com política de anti-inanição.
-        // Se 5 processos de alta prioridade executaram seguidamente, dá chance para os de média/baixa.
         boolean antiInanicaoAtivada = false;
         if (contadorCiclosAltaPrioridade >= 5) {
             if (!listaMediaPrioridade.estaVazio()) {
@@ -58,7 +54,7 @@ public class Scheduler {
             }
         }
 
-        // 3. Se a anti-inanição não foi ativada, segue a seleção por prioridade padrão.
+
         if (processoEmExecucao == null) {
             if (!listaAltaPrioridade.estaVazio()) {
                 processoEmExecucao = listaAltaPrioridade.removerProcesso();
@@ -69,23 +65,20 @@ public class Scheduler {
             }
         }
 
-
-        // 4. Executa o processo selecionado.
         if (processoEmExecucao != null) {
-            // Incrementa o contador apenas se o processo executado for de alta prioridade.
+
             if (processoEmExecucao.getPrioridade() == 1 && !antiInanicaoAtivada) {
                 contadorCiclosAltaPrioridade++;
             }
 
             System.out.println("Executando: " + processoEmExecucao.getNome() + " (Prioridade: " + processoEmExecucao.getPrioridade() + ")");
 
-            // Verifica se o processo precisa de um recurso e o bloqueia.
             if ("DISCO".equals(processoEmExecucao.getRecursosNecessarios()) && !processoEmExecucao.getSolicitouDisco()) {
                 System.out.println(" Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
                 processoEmExecucao.setSolicitouDisco(true);
                 listaBloqueados.addFinal(processoEmExecucao);
             } else {
-                // Caso contrário, executa normalmente.
+
                 processoEmExecucao.decrementarCiclos();
 
                 if (processoEmExecucao.getCiclosNecessarios() > 0) {

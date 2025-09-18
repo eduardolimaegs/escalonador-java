@@ -34,11 +34,11 @@ public class Main {
             return;
         }
 
-        System.out.println(">>> INICIANDO A SIMULAÇÃO DO ESCALONADOR <<<");
+        System.out.println(">>> INICIANDO O ESCALONADOR <<<");
 
         int cicloAtual = 0;
         while (!scheduler.todasAsListasEstaoVazias()) {
-            System.out.println("\n==================== CICLO " + (++cicloAtual) + " ====================");
+            System.out.println("\n=============== CICLO " + (++cicloAtual) + " ===============");
             scheduler.executarCicloDeCPU();
 
         }

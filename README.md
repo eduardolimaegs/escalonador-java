@@ -5,6 +5,11 @@
 Um simulador de escalonador de CPU desenvolvido em Java que implementa um algoritmo de escalonamento por prioridades com uma política de anti-inanição (anti-starvation).
 
 ---
+Analise e Estrutura de Dados (Professor: Dimmy Magalhães)
+
+Alunos: Eduardo Castelo Branco e Vinicius Gomes.
+
+https://github.com/eduardolimaegs/escalonador-java.git
 
 ## Índice
 
