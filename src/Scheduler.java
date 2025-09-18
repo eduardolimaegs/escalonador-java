@@ -53,7 +53,7 @@ public class Scheduler {
                 antiInanicaoAtivada = true;
             }
             if(antiInanicaoAtivada) {
-                System.out.println("-> ANTI-INANIÇÃO ATIVADA: Dando chance para outras prioridades.");
+                System.out.println("ANTI-INANIÇÃO ATIVADA: Dando chance para outras prioridades.");
                 contadorCiclosAltaPrioridade = 0; // Reseta o contador
             }
         }
@@ -81,7 +81,7 @@ public class Scheduler {
 
             // Verifica se o processo precisa de um recurso e o bloqueia.
             if ("DISCO".equals(processoEmExecucao.getRecursosNecessarios()) && !processoEmExecucao.getSolicitouDisco()) {
-                System.out.println("  -> Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
+                System.out.println(" Processo " + processoEmExecucao.getNome() + " bloqueado por recurso 'DISCO'.");
                 processoEmExecucao.setSolicitouDisco(true);
                 listaBloqueados.addFinal(processoEmExecucao);
             } else {
