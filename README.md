@@ -2,7 +2,7 @@
 
 
 
-Um simulador de escalonador de CPU desenvolvido em Java que implementa um algoritmo de escalonamento por prioridades com uma política de anti-inanição (anti-starvation).
+Um simulador de escalonador de CPU desenvolvido em Java que implementa um algoritmo de escalonamento por prioridades com uma política de anti-inanição
 
 ---
 Analise e Estrutura de Dados (Professor: Dimmy Magalhães)
