@@ -7,7 +7,7 @@ Um simulador de escalonador de CPU desenvolvido em Java que implementa um algori
 ---
 Analise e Estrutura de Dados (Professor: Dimmy Magalhães)
 
-Alunos: Eduardo Castelo Branco e Vinicius Gomes.
+Alunos: Eduardo Castelo Branco e Vinicius Gomes
 
 https://github.com/eduardolimaegs/escalonador-java.git
 
